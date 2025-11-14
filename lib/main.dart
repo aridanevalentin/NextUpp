@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+Future<void> main() async {
+  // Asegura que los 'bindings' de Flutter estén inicializados
+  WidgetsFlutterBinding.ensureInitialized();
+  // Carga el archivo .env
+  await dotenv.load(fileName: ".env");
   runApp(const NextUppApp());
 }
 

@@ -1,0 +1,28 @@
+# Este archivo le dice a build_runner qué generadores ejecutar y dónde
+
+targets:
+  $default:
+    builders:
+      # --- Configuración para json_serializable (el generador de API) ---
+      json_serializable:
+        generate_for:
+          # 'generate_for' ahora es un mapa
+          include:
+            # SÓLO mira la carpeta 'remote'
+            - lib/data/remote/**.dart
+          exclude:
+            # IGNORA la carpeta 'local'
+            - lib/data/local/**.dart
+        options:
+          explicit_to_json: true
+
+      # --- Configuración para drift_dev (el generador de BBDD) ---
+      drift_dev:
+        generate_for:
+          # 'generate_for' ahora es un mapa
+          include:
+            # SÓLO mira la carpeta 'local'
+            - lib/data/local/**.dart
+          exclude:
+            # IGNORA la carpeta 'remote'
+            - lib/data/remote/**.dart

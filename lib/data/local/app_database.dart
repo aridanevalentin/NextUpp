@@ -7,7 +7,7 @@ import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 
-// Esta linea e dice al generador de código (build_runner) que cree un archivo llamado 'app_database.g.dart' con el código SQL
+// Esta linea le dice al generador de código (build_runner) que cree un archivo llamado 'app_database.g.dart' con el código SQL
 part 'app_database.g.dart';
 
 // --- DEFINICIÓN DE LA TABLA ---
@@ -42,13 +42,14 @@ class AppDatabase extends _$AppDatabase { // _$AppDatabase es la clase generada
   @override
   int get schemaVersion => 1;
 
+  @override
   MediaDao get mediaDao => MediaDao(this);
 }
 // --- DEFINICIÓN DEL DAO ---
 @DriftAccessor(tables: [MediaItems])
 class MediaDao extends DatabaseAccessor<AppDatabase> with _$MediaDaoMixin {
 
-  MediaDao(AppDatabase db) : super(db);
+  MediaDao(super.db);
 
   // Obtiene un Stream de items "Pendientes" de un tipo dado
   Stream<List<MediaItemEntry>> getPendingItems(MediaType type) {
@@ -75,7 +76,7 @@ class MediaDao extends DatabaseAccessor<AppDatabase> with _$MediaDaoMixin {
   }
 
   // Guarda un item (INSERT o UPDATE) con estado 'pending'
-  Future<void> savedMediaItem(MediaItemEntry item) {
+  Future<void> saveMediaItem(MediaItemEntry item) {
     return into(mediaItems).insert(
         item.copyWith(status: MediaStatus.pending),
         mode: InsertMode.insertOrReplace, // => onConflict = REPLACE
@@ -92,6 +93,14 @@ class MediaDao extends DatabaseAccessor<AppDatabase> with _$MediaDaoMixin {
         status: Value(MediaStatus.completed),
       ),
     );
+  }
+
+  // Borra un item (DELETE)
+  Future<void> deleteMediaItem(int id, MediaType type) {
+    return (delete(mediaItems)
+      ..where((tbl) => tbl.id.equals(id))..where((tbl) =>
+          tbl.mediaType.equals(type.name)))
+        .go();
   }
 
   // --- CÁLCULO DE TIEMPO ---

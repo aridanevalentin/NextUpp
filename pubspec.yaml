@@ -35,16 +35,16 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
 
-  # 1. State Management (El "ViewModel" + "Flow" de Flutter)
+  # State Management (El "ViewModel" + "Flow" de Flutter)
   flutter_riverpod: ^2.5.1
 
-  # 2. Networking (El "Retrofit" de Flutter)
+  # Networking (El "Retrofit" de Flutter)
   dio: ^5.5.0+1
 
-  # 3. JSON Parsing (El "Gson/Moshi" de Flutter)
+  # JSON Parsing (El "Gson/Moshi" de Flutter)
   json_annotation: ^4.9.0
 
-  # 4. Database (El "Room" de Flutter)
+  # Database (El "Room" de Flutter)
   drift: ^2.19.0
   # Drivers de la base de datos para Android/iOS
   sqlite3_flutter_libs: ^0.5.24
@@ -52,11 +52,14 @@ dependencies:
   path_provider: ^2.1.3
   path: ^1.9.0
 
-  # 5. Service Locator ("Inyección de Dependencias")
+  # Service Locator ("Inyección de Dependencias")
   get_it: ^7.7.0
 
-  # 6. Value Equality (Para que las 'data class' funcionen bien)
+  # Value Equality (Para que las 'data class' funcionen bien)
   equatable: ^2.0.5
+
+  # Para cargar variables de entorno desde un archivo .env
+  flutter_dotenv: ^5.1.0
 
 dev_dependencies:
   flutter_test:
@@ -69,13 +72,13 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
 
-  # 1. El "KSP" de Flutter.
+  # El "KSP" de Flutter.
   build_runner: ^2.4.11
 
-  # 2. El generador de código para la BBDD ("Room")
+  # El generador de código para la BBDD ("Room")
   drift_dev: ^2.19.0
 
-  # 3. El generador de código para JSON ("Gson")
+  # El generador de código para JSON ("Gson")
   json_serializable: ^6.8.0
 
 # For information on the generic Dart part of this file, see the

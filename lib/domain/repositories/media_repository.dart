@@ -17,7 +17,7 @@ abstract class MediaRepository {
 
   // Obtiene la lista de "pendientes" (status = 'pending')
   // Devuelve un 'Stream' (equivalente a 'Flow') que se actualiza solo
-  Stream<List<MediaItem>> getWatchlistItems();
+  Stream<List<MediaItem>> getPendingItems(MediaType type);
 
   // Obtiene la lista de "completados" (status = 'completed')
   Stream<List<MediaItem>> getCompletedItems(MediaType type);
