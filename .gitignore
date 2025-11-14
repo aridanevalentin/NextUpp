@@ -15,6 +15,9 @@ migrate_working_dir/
 # Excluir el archivo de variables de entorno
 .env
 
+# Excluir los archivos autogenerados
+*.g.dart
+
 # IntelliJ related
 *.iml
 *.ipr

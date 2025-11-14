@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:nextupp/core/service_locator.dart';
 
 Future<void> main() async {
   // Asegura que los 'bindings' de Flutter estén inicializados
   WidgetsFlutterBinding.ensureInitialized();
   // Carga el archivo .env
   await dotenv.load(fileName: ".env");
+  // Configura todas las dependencias antes de que la app arranque.
+  await setupLocator();
+
   runApp(const NextUppApp());
 }
 
