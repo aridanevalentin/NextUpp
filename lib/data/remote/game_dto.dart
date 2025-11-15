@@ -9,22 +9,22 @@ class GameDto {
   @JsonKey(name: 'name')
   final String title;
   @JsonKey(name: 'description_raw')
-  final String overview;
+  final String? overview;
   @JsonKey(name: 'background_image')
   final String? posterPath;
   @JsonKey(name: 'rating') // Puntuación sobre 5
   final double voteAverage;
-  final String released;
+  final String? released;
   final int playtime;
   final List<PlatformDto> platforms;
 
   GameDto({
     required this.id,
     required this.title,
-    required this.overview,
+    this.overview,
     this.posterPath,
     required this.voteAverage,
-    required this.released,
+    this.released,
     required this.playtime,
     required this.platforms,
   });

@@ -16,11 +16,11 @@ extension GameMapper on GameDto {
       id: id,
       title: title, // 'name' en el DTO se mapea a 'title'
       // 'description_raw' se mapea a 'overview'
-      overview: overview,
+      overview: overview ?? '',
       // RAWG da la URL completa, no necesita construcción
       posterUrl: posterPath ?? '',
       voteAverage: normalizedRating, // Usa la puntuación normalizada
-      releaseDate: released,
+      releaseDate: released ?? '',
       playtimeInHours: playtime, // La API ya lo da en horas
       platforms: platformNames, // Pasa la lista de nombres
     );

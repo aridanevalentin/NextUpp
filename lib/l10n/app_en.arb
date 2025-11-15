@@ -1,0 +1,44 @@
+{
+  "@@locale": "en",
+  "appName": "NextUpp",
+  "searchHint": "Search {mediaType}...",
+  "@searchHint": {
+    "description": "Hint text for the search bar",
+    "placeholders": {
+      "mediaType": {
+        "type": "String",
+        "example": "movies"
+      }
+    }
+  },
+  "searchClearTooltip": "Clear search",
+  "searchInitialMessage": "Search for movies, series or games",
+  "searchError": "Error: {message}",
+  "@searchError": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "mediaTypeMovie": "Movie",
+  "mediaTypeSeries": "Series",
+  "mediaTypeGame": "Game",
+  "pendingTitle": "Pending {mediaType}",
+  "@pendingTitle": {
+    "placeholders": { "mediaType": {} }
+  },
+  "completedTitle": "Completed {mediaType}",
+  "@completedTitle": {
+    "placeholders": { "mediaType": {} }
+  },
+  "totalTime": "Total: {time}",
+  "@totalTime": {
+    "placeholders": { "time": {} }
+  },
+  "pendingEmptyMessage": "Your pending list is empty.",
+  "completedEmptyMessage": "Your completed list is empty.",
+  "nav_search_label": "Search",
+  "nav_watchlist_label": "Pending",
+  "nav_watched_label": "Completed"
+}

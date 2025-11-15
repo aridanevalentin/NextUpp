@@ -1,0 +1,10 @@
+# Archivo de configuración para el generador de localización
+
+# El archivo .arb base
+template-arb-file: app_en.arb
+
+# El archivo .dart que se generará
+output-localization-file: app_localizations.dart
+
+# Opcional: El nombre de la clase que se generará
+output-class: AppLocalizations

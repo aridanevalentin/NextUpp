@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nextupp/core/service_locator.dart';
+import 'package:nextupp/l10n/app_localizations.dart';
+import 'package:nextupp/presentation/screens/home_screen.dart';
 
 Future<void> main() async {
   // Asegura que los 'bindings' de Flutter estén inicializados
@@ -10,7 +13,11 @@ Future<void> main() async {
   // Configura todas las dependencias antes de que la app arranque.
   await setupLocator();
 
-  runApp(const NextUppApp());
+  runApp(
+      const ProviderScope(
+          child: NextUppApp()
+      ),
+  );
 }
 
 // Este es el Widget raíz de la aplicación
@@ -31,6 +38,10 @@ class NextUppApp extends StatelessWidget {
       // 'title' es para el sistema operativo
       title: 'NextUpp',
 
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+
+
       // 'theme' es donde pondremos el tema de colores
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -39,30 +50,6 @@ class NextUppApp extends StatelessWidget {
 
       // 'home' es la primera pantalla que se muestra
       home: const HomeScreen(),
-    );
-  }
-}
-
-
-// Primera pantala
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    // Scaffold es el esqueleto (como el Scaffold de Compose)
-    return Scaffold(
-      // TopAppBar
-      appBar: AppBar(
-        title: const Text('NextUpp'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      ),
-      // Contenido
-      body: const Center(
-        child: Text(
-          '¡Mi app NextUpp funciona!',
-        ),
-      ),
     );
   }
 }

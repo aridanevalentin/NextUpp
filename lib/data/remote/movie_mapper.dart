@@ -9,10 +9,10 @@ extension MovieMapper on MovieDto {
     return Movie(
       id: id,
       title: title,
-      overview: overview,
+      overview: overview ?? '',
       posterUrl: posterPath != null ? '$_tmdbPosterBaseUrl$posterPath' : '',
-      voteAverage: voteAverage,
-      releaseDate: releaseDate,
+      voteAverage: (voteAverage ?? 0).toDouble(),
+      releaseDate: releaseDate ?? '',
       runtime: runtime ?? 0,
     );
   }

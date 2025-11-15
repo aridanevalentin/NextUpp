@@ -7,23 +7,23 @@ part 'movie_dto.g.dart';
 class MovieDto {
   final int id;
   final String title;
-  final String overview;
+  final String? overview;
   @JsonKey(name: 'poster_path')
   final String? posterPath;
   @JsonKey(name: 'vote_average')
-  final double voteAverage;
+  final num? voteAverage;
   @JsonKey(name: 'release_date')
-  final String releaseDate;
+  final String? releaseDate;
   @JsonKey(name: 'runtime')
   final int? runtime;
 
   MovieDto({
     required this.id,
     required this.title,
-    required this.overview,
+    this.overview,
     this.posterPath,
-    required this.voteAverage,
-    required this.releaseDate,
+    this.voteAverage,
+    this.releaseDate,
     this.runtime,
   });
 

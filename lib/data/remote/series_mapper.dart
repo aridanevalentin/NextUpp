@@ -10,18 +10,21 @@ extension SeriesMapper on SeriesDto {
         ? episodeRunTime!.first
         : 45;
 
-    final int totalDuration = numberOfEpisodes * avgRuntime;
+    final int episodes = numberOfEpisodes ?? 0;
+    final int seasons = numberOfSeasons ?? 0;
+
+    final int totalDuration = episodes * avgRuntime;
 
     return Series(
       id: id,
       title: title,
-      overview: overview,
+      overview: overview ?? '',
       posterUrl: posterPath != null ? '$_tmdbPosterBaseUrl$posterPath' : '',
-      voteAverage: voteAverage,
-      releaseDate: releaseDate,
+      voteAverage: (voteAverage ?? 0).toDouble(),
+      releaseDate: releaseDate ?? '',
       totalDurationInMinutes: totalDuration,
-      numberOfSeasons: numberOfSeasons,
-      numberOfEpisodes: numberOfEpisodes,
+      numberOfSeasons: seasons,
+      numberOfEpisodes: episodes,
     );
   }
 }
