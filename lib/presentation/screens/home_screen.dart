@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nextupp/domain/models/media_type.dart';
 import 'package:nextupp/l10n/app_localizations.dart';
-import 'package:nextupp/presentation/utils/localization_extensions.dart';
 import 'package:nextupp/presentation/screens/dashboard/media_dashboard_screen.dart';
 
 // --- La Pantalla de Inicio ---

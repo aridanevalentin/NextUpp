@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nextupp/domain/models/media_status.dart';
 import 'package:nextupp/domain/models/media_type.dart';
 import 'package:nextupp/presentation/providers/media_list_provider.dart';
 import 'package:nextupp/presentation/providers/media_list_state.dart';
 import 'package:nextupp/l10n/app_localizations.dart';
 import 'package:nextupp/presentation/utils/localization_extensions.dart';
+import 'package:nextupp/presentation/widgets/media_card.dart';
 
 // Es un ConsumerWidget porque solo necesita leer el provider y no tiene estado local (como un TextEditingController).
 class PendingScreen extends ConsumerWidget {
@@ -39,11 +41,11 @@ class PendingScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: _buildBody(state, l10n),
+      body: _buildBody(state, l10n, ref),
     );
   }
 
-  Widget _buildBody(MediaListState state, AppLocalizations l10n) {
+  Widget _buildBody(MediaListState state, AppLocalizations l10n, ref) {
     if (state.isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -58,17 +60,21 @@ class PendingScreen extends ConsumerWidget {
       itemCount: state.items.length,
       itemBuilder: (context, index) {
         final item = state.items[index];
-        // TODO: Reemplazar esto con un 'MediaCard' reutilizable
-        return ListTile(
-          leading: item.posterUrl.isNotEmpty
-              ? Image.network(item.posterUrl, width: 50, fit: BoxFit.cover)
-              : const Icon(Icons.movie),
-          title: Text(item.title),
-          subtitle: Text(
-            '${item.releaseDate.substring(0, 4)} - ${item.totalDurationInMinutes} min',
-          ),
-          // TODO: Añadir menú para "Mark as Completed" o "Remove"
+        return MediaCard(
+          item: item,
+          status: MediaStatus.pending,
+          onTap: () {
+            // TODO: Navegar a la pantalla de detalle
+          },
+          onSaveToPending: () { /* No se usa aquí (ya está en pendientes) */ },
+          onMarkAsCompleted: () {
+            ref.read(pendingListProvider(mediaType).notifier).markAsCompleted(item);
+          },
+          onRemove: () {
+            ref.read(pendingListProvider(mediaType).notifier).removeMediaItem(item);
+          },
         );
+          // TODO: Añadir menú para "Mark as Completed" o "Remove"
       },
     );
   }

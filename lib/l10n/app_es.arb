@@ -14,6 +14,13 @@
   "pendingEmptyMessage": "Tu lista de pendientes está vacía.",
   "completedEmptyMessage": "Tu lista de completados está vacía.",
   "nav_search_label": "Buscar",
-  "nav_watchlist_label": "Pendientes",
-  "nav_watched_label": "Completados"
+  "nav_pending_label": "Pendientes",
+  "nav_completed_label": "Completados",
+  "card_more_actions": "Más acciones",
+  "card_add_to_pending": "Añadir a Pendientes",
+  "card_mark_as_completed": "Marcar como Completado",
+  "card_remove": "Eliminar",
+  "snackbar_pending": "Añadido a Pendientes",
+  "snackbar_completed": "Marcado como Completado",
+  "snackbar_removed": "Eliminado de la lista"
 }

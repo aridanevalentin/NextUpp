@@ -64,6 +64,7 @@ dependencies:
   # Para cargar variables de entorno desde un archivo .env
   flutter_dotenv: ^5.1.0
 
+  intl: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

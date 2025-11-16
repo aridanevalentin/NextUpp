@@ -39,6 +39,13 @@
   "pendingEmptyMessage": "Your pending list is empty.",
   "completedEmptyMessage": "Your completed list is empty.",
   "nav_search_label": "Search",
-  "nav_watchlist_label": "Pending",
-  "nav_watched_label": "Completed"
+  "nav_pending_label": "Pending",
+  "nav_completed_label": "Completed",
+  "card_more_actions": "More actions",
+  "card_add_to_pending": "Add to Pending",
+  "card_mark_as_completed": "Mark as Completed",
+  "card_remove": "Remove",
+  "snackbar_pending": "Added to Pending",
+  "snackbar_completed": "Marked as Completed",
+  "snackbar_removed": "Removed from list"
 }

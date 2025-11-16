@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nextupp/core/service_locator.dart';
+import 'package:nextupp/domain/models/media_item.dart';
 import 'package:nextupp/domain/models/media_type.dart';
 import 'package:nextupp/domain/repositories/media_repository.dart';
 import 'package:nextupp/presentation/providers/media_list_state.dart';
@@ -9,6 +10,25 @@ import 'package:nextupp/presentation/providers/media_list_state.dart';
 class PendingListNotifier extends StateNotifier<MediaListState> {
   final MediaRepository _repository = sl<MediaRepository>();
   final MediaType _mediaType;
+
+  Future<void> markAsCompleted(MediaItem item) async {
+    // Llama al repositorio para actualizar la BBDD
+    try {
+      await _repository.markAsCompleted(item.id, item.mediaType);
+    } catch (e) {
+      // TODO: Manejar el error (ej. mostrar un snackbar)
+      print('Error al marcar como completado: $e');
+    }
+  }
+
+  Future<void> removeMediaItem(MediaItem item) async {
+    try {
+      await _repository.deleteMediaItem(item.id, item.mediaType);
+    } catch (e) {
+      // TODO: Manejar el error
+      print('Error al eliminar: $e');
+    }
+  }
 
   // Suscripciones a los Streams para poder cancelarlas
   StreamSubscription? _itemsSubscription;
@@ -49,6 +69,15 @@ class CompletedListNotifier extends StateNotifier<MediaListState> {
   StreamSubscription? _itemsSubscription;
   StreamSubscription? _timeSubscription;
 
+  Future<void> removeMediaItem(MediaItem item) async {
+    try {
+      await _repository.deleteMediaItem(item.id, item.mediaType);
+    } catch (e) {
+      // TODO: Manejar el error
+      print('Error al eliminar: $e');
+    }
+  }
+
   CompletedListNotifier(this._mediaType) : super(const MediaListState()) {
     _listenToCompletedItems();
   }
@@ -77,7 +106,7 @@ class CompletedListNotifier extends StateNotifier<MediaListState> {
 
 // --- LOS PROVIDERS GLOBALES ---
 // Los que la UI usa
-// Al ser 'family' les podemos pasar un parámetro
+// Al ser family se les puede pasar un parámetro
 
 // Provider para la lista de Pendientes
 final pendingListProvider = StateNotifierProvider.family<

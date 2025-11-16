@@ -42,6 +42,6 @@ Future<void> setupLocator() async {
     ),
   );
 
-  // --- Providers / ViewModels (Se añadirán aquí más adelante) ---
+  // --- Providers / ViewModels ---
   // TODO PROVIDERS
 }

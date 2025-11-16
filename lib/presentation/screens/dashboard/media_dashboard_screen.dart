@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nextupp/domain/models/media_type.dart';
 import 'package:nextupp/l10n/app_localizations.dart';
-import 'package:nextupp/presentation/providers/search_provider.dart';
 import 'package:nextupp/presentation/screens/completed_screen.dart';
 import 'package:nextupp/presentation/screens/pending_screen.dart';
 import 'package:nextupp/presentation/screens/search_screen.dart';
@@ -86,12 +85,12 @@ class _MediaDashboardScreenState extends ConsumerState<MediaDashboardScreen> {
           // Pestaña de Pendientes
           BottomNavigationBarItem(
             icon: const Icon(Icons.list),
-            label: l10n.nav_watchlist_label,
+            label: l10n.nav_pending_label,
           ),
           // Pestaña de Completados
           BottomNavigationBarItem(
             icon: const Icon(Icons.check),
-            label: l10n.nav_watched_label,
+            label: l10n.nav_completed_label,
           ),
         ],
       ),
