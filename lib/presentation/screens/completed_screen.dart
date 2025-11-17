@@ -8,6 +8,7 @@ import 'package:nextupp/presentation/providers/media_list_state.dart';
 import 'package:nextupp/l10n/app_localizations.dart';
 import 'package:nextupp/presentation/utils/localization_extensions.dart';
 import 'package:nextupp/presentation/widgets/media_card.dart';
+import 'package:nextupp/presentation/screens/detail/detail_screen.dart';
 
 class CompletedScreen extends ConsumerWidget {
   final MediaType mediaType;
@@ -58,7 +59,13 @@ class CompletedScreen extends ConsumerWidget {
           item: item,
           status: MediaStatus.completed,
           onTap: () {
-            // TODO: Navegar a la pantalla de detalle
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => DetailScreen(
+                  args: (id: item.id, type: item.mediaType),
+                ),
+              ),
+            );
           },
           onSaveToPending: () {
             // TODO: Llamar al ViewModel para "mover a pendientes"

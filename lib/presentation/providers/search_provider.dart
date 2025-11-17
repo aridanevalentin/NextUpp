@@ -5,7 +5,7 @@ import 'package:nextupp/domain/models/media_item.dart';
 import 'package:nextupp/domain/models/media_status.dart';
 import 'package:nextupp/domain/models/media_type.dart';
 import 'package:nextupp/domain/repositories/media_repository.dart';
-import 'package:nextupp/presentation/providers/detail_state.dart'; // (No, esto está mal)
+// (No, esto está mal)
 import 'package:nextupp/presentation/providers/search_state.dart';
 
 // --- ViewModel == StateNotifier ---

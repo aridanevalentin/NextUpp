@@ -7,6 +7,7 @@ import 'package:nextupp/presentation/providers/search_provider.dart';
 import 'package:nextupp/presentation/providers/search_state.dart';
 import 'package:nextupp/presentation/utils/localization_extensions.dart';
 import 'package:nextupp/presentation/widgets/media_card.dart';
+import 'package:nextupp/presentation/screens/detail/detail_screen.dart';
 // ConsumerStatefulWidget para poder consumir providers y tener un State
 class SearchScreen extends ConsumerStatefulWidget {
   final MediaType mediaType;
@@ -103,7 +104,13 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           item: item,
           status: status,
           onTap: () {
-            // TODO: Navegar a la pantalla de detalle
+            Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder: (context) => DetailScreen(
+                        args: (id: item.id, type: item.mediaType),
+                    ),
+                ),
+            );
           },
           onSaveToPending: () {
             notifier.saveToPending(item);

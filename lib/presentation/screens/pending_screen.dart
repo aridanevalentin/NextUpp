@@ -7,6 +7,7 @@ import 'package:nextupp/presentation/providers/media_list_state.dart';
 import 'package:nextupp/l10n/app_localizations.dart';
 import 'package:nextupp/presentation/utils/localization_extensions.dart';
 import 'package:nextupp/presentation/widgets/media_card.dart';
+import 'package:nextupp/presentation/screens/detail/detail_screen.dart';
 
 // Es un ConsumerWidget porque solo necesita leer el provider y no tiene estado local (como un TextEditingController).
 class PendingScreen extends ConsumerWidget {
@@ -64,7 +65,13 @@ class PendingScreen extends ConsumerWidget {
           item: item,
           status: MediaStatus.pending,
           onTap: () {
-            // TODO: Navegar a la pantalla de detalle
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => DetailScreen(
+                  args: (id: item.id, type: item.mediaType),
+                ),
+              ),
+            );
           },
           onSaveToPending: () { /* No se usa aquí (ya está en pendientes) */ },
           onMarkAsCompleted: () {

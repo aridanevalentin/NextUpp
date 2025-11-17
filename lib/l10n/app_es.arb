@@ -22,5 +22,14 @@
   "card_remove": "Eliminar",
   "snackbar_pending": "Añadido a Pendientes",
   "snackbar_completed": "Marcado como Completado",
-  "snackbar_removed": "Eliminado de la lista"
+  "snackbar_removed": "Eliminado de la lista",
+  "card_remove": "Eliminar",
+  "detail_loading": "Cargando...",
+  "detail_back_button": "Atrás",
+  "detail_rating_year": "Nota: {rating}/10 | Año: {year}",
+  "detail_series_info": "Temporadas: {seasons} | Episodios: {episodes}",
+  "detail_game_platforms": "Plataformas: {platforms}",
+  "detail_fab_add": "Añadir a Pendientes",
+  "detail_fab_watched": "Marcar como Completado",
+  "detail_fab_remove": "Eliminar"
 }

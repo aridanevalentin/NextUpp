@@ -1,5 +1,5 @@
-import 'media_item.dart';
-import 'media_type.dart';
+import 'package:nextupp/domain/models/media_item.dart';
+import 'package:nextupp/domain/models/media_type.dart';
 
 class Series extends MediaItem {
   final int numberOfSeasons;

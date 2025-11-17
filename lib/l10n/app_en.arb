@@ -47,5 +47,31 @@
   "card_remove": "Remove",
   "snackbar_pending": "Added to Pending",
   "snackbar_completed": "Marked as Completed",
-  "snackbar_removed": "Removed from list"
+  "snackbar_removed": "Removed from list",
+  "card_remove": "Remove",
+  "detail_loading": "Loading...",
+  "detail_back_button": "Back",
+  "detail_rating_year": "Rating: {rating}/10 | Year: {year}",
+  "@detail_rating_year": {
+    "placeholders": {
+      "rating": { "type": "String" },
+      "year": { "type": "String" }
+    }
+  },
+  "detail_series_info": "Seasons: {seasons} | Episodes: {episodes}",
+  "@detail_series_info": {
+    "placeholders": {
+      "seasons": { "type": "String" },
+      "episodes": { "type": "String" }
+    }
+  },
+  "detail_game_platforms": "Platforms: {platforms}",
+  "@detail_game_platforms": {
+    "placeholders": {
+      "platforms": { "type": "String" }
+    }
+  },
+  "detail_fab_add": "Add to Pending",
+  "detail_fab_watched": "Mark as Completed",
+  "detail_fab_remove": "Remove"
 }
