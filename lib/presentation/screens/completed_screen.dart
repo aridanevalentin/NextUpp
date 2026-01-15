@@ -1,13 +1,14 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nextupp/domain/models/media_status.dart';
 import 'package:nextupp/domain/models/media_type.dart';
 import 'package:nextupp/presentation/providers/media_list_provider.dart';
 import 'package:nextupp/presentation/providers/media_list_state.dart';
+import 'package:nextupp/core/utils/snackbar_utils.dart';
+import 'package:nextupp/core/utils/time_formatter.dart';
 import 'package:nextupp/l10n/app_localizations.dart';
 import 'package:nextupp/presentation/utils/localization_extensions.dart';
-import 'package:nextupp/presentation/widgets/media_card.dart';
+import 'package:nextupp/presentation/widgets/media_grid.dart';
 import 'package:nextupp/presentation/screens/detail/detail_screen.dart';
 
 class CompletedScreen extends ConsumerWidget {
@@ -21,27 +22,50 @@ class CompletedScreen extends ConsumerWidget {
     final mediaTypeString = mediaType.toLocalizedString(l10n);
 
     // Observa el provider de completados
-    final state = ref.watch(completedListProvider(mediaType));
+    final provider = completedListProvider(mediaType);
+    final state = ref.watch(provider);
+
+    // Escucha cambios de error
+    ref.listen(provider, (previous, next) {
+      if (next.failure != null && next.failure != previous?.failure) {
+        SnackbarUtils.showError(context, next.failure!.message);
+      }
+    });
 
     return Scaffold(
-      appBar: AppBar(
-        // TODO: Localizar este título
-        title: Text(l10n.completedTitle(mediaTypeString)),
-        actions: [
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 16.0),
-              // TODO: Formatear estos minutos
-              child: Text(l10n.totalTime('${state.totalTimeInMinutes} min')),
+      body: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return [
+            SliverAppBar(
+              title: Text(l10n.completedTitle(mediaTypeString)),
+              centerTitle: true,
+              floating: true,
+              snap: true,
+              actions: [
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 16.0),
+                    child: Text(
+                      l10n.totalTime(formatDuration(state.totalTimeInMinutes)),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
+          ];
+        },
+        body: _buildBody(context, state, l10n, ref),
       ),
-      body: _buildBody(state, l10n, ref),
     );
   }
 
-  Widget _buildBody(MediaListState state, AppLocalizations l10n, WidgetRef ref) {
+  Widget _buildBody(
+    BuildContext context,
+    MediaListState state,
+    AppLocalizations l10n,
+    WidgetRef ref,
+  ) {
     if (state.isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -50,31 +74,26 @@ class CompletedScreen extends ConsumerWidget {
       return Center(child: Text(l10n.completedEmptyMessage));
     }
 
-    return ListView.builder(
-      itemCount: state.items.length,
-      itemBuilder: (context, index) {
-        final item = state.items[index];
-
-        return MediaCard(
-          item: item,
-          status: MediaStatus.completed,
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => DetailScreen(
-                  args: (id: item.id, type: item.mediaType),
-                ),
-              ),
-            );
-          },
-          onSaveToPending: () {
-            // TODO: Llamar al ViewModel para "mover a pendientes"
-          },
-          onMarkAsCompleted: () { /* No se usa aquí */ },
-          onRemove: () {
-            ref.read(completedListProvider(mediaType).notifier).removeMediaItem(item);
-          },
+    return MediaGrid(
+      items: state.items,
+      mediaType: mediaType,
+      fixedStatus: MediaStatus.completed,
+      onTap: (item) {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) =>
+                DetailScreen(args: (id: item.id, type: item.mediaType)),
+          ),
         );
+      },
+      onSaveToPending: (item) {
+        ref.read(completedListProvider(mediaType).notifier).moveToPending(item);
+      },
+      onMarkAsCompleted: (item) {},
+      onRemove: (item) {
+        ref
+            .read(completedListProvider(mediaType).notifier)
+            .removeMediaItem(item);
       },
     );
   }

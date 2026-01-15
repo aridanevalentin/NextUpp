@@ -3,7 +3,6 @@ import 'package:nextupp/domain/models/media_type.dart';
 import 'package:nextupp/domain/models/media_status.dart';
 
 abstract class MediaRepository {
-
   // --- API ---
 
   // Busca cualquier tipo de media en las APIs
@@ -30,6 +29,9 @@ abstract class MediaRepository {
 
   // Marca un item como "completado"
   Future<void> markAsCompleted(int id, MediaType type);
+
+  // Mueve un item a pendientes
+  Future<void> moveToPending(int id, MediaType type);
 
   // Borra un item de la base de datos
   Future<void> deleteMediaItem(int id, MediaType type);

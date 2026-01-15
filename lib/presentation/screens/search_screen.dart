@@ -6,8 +6,9 @@ import 'package:nextupp/l10n/app_localizations.dart';
 import 'package:nextupp/presentation/providers/search_provider.dart';
 import 'package:nextupp/presentation/providers/search_state.dart';
 import 'package:nextupp/presentation/utils/localization_extensions.dart';
-import 'package:nextupp/presentation/widgets/media_card.dart';
+import 'package:nextupp/presentation/widgets/media_grid.dart';
 import 'package:nextupp/presentation/screens/detail/detail_screen.dart';
+
 // ConsumerStatefulWidget para poder consumir providers y tener un State
 class SearchScreen extends ConsumerStatefulWidget {
   final MediaType mediaType;
@@ -77,11 +78,11 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
   // --- Widget para construir el cuerpo ---
   Widget _buildBody(
-      BuildContext context,
-      SearchState state,
-      SearchNotifier notifier,
-      AppLocalizations l10n,
-      ) {
+    BuildContext context,
+    SearchState state,
+    SearchNotifier notifier,
+    AppLocalizations l10n,
+  ) {
     if (state.isLoading) {
       return const CircularProgressIndicator();
     }
@@ -92,37 +93,34 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       return Text(l10n.searchInitialMessage);
     }
 
-    return ListView.builder(
+    // Asegurarse de quitar el padding del ListView para que no choque con el grid,
+    // o aplicarlo al grid si es necesario.
+    return Padding(
       padding: const EdgeInsets.only(bottom: 80),
-      itemCount: state.results.length,
-      itemBuilder: (context, index) {
-        final item = state.results[index];
-        final status =
-            state.mediaStatusMap[item.id] ?? MediaStatus.notAdded;
-
-        return MediaCard(
-          item: item,
-          status: status,
-          onTap: () {
-            Navigator.of(context).push(
-                MaterialPageRoute(
-                    builder: (context) => DetailScreen(
-                        args: (id: item.id, type: item.mediaType),
-                    ),
-                ),
-            );
-          },
-          onSaveToPending: () {
-            notifier.saveToPending(item);
-          },
-          onMarkAsCompleted: () {
-            notifier.markAsCompleted(item);
-          },
-          onRemove: () {
-            notifier.removeItem(item);
-          },
-        );
-      },
+      child: MediaGrid(
+        items: state.results,
+        mediaType: widget.mediaType,
+        statusBuilder: (item) {
+          return state.mediaStatusMap[item.id] ?? MediaStatus.notAdded;
+        },
+        onTap: (item) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) =>
+                  DetailScreen(args: (id: item.id, type: item.mediaType)),
+            ),
+          );
+        },
+        onSaveToPending: (item) {
+          notifier.saveToPending(item);
+        },
+        onMarkAsCompleted: (item) {
+          notifier.markAsCompleted(item);
+        },
+        onRemove: (item) {
+          notifier.removeItem(item);
+        },
+      ),
     );
   }
 }

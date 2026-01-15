@@ -9,7 +9,7 @@ import 'package:nextupp/domain/repositories/media_repository.dart';
 // Imports de la capa de Data (las herramientas)
 import 'package:nextupp/data/local/app_database.dart';
 import 'package:nextupp/data/local/media_entry_mapper.dart'; // Mapper de BBDD
-import 'package:nextupp/data/remote/movie_mapper.dart';     // Mappers de API
+import 'package:nextupp/data/remote/movie_mapper.dart'; // Mappers de API
 import 'package:nextupp/data/remote/series_mapper.dart';
 import 'package:nextupp/data/remote/game_mapper.dart';
 import 'package:nextupp/data/remote/rawg_api_client.dart';
@@ -27,9 +27,9 @@ class MediaRepositoryImpl implements MediaRepository {
     required TmdbApiClient tmdbApi,
     required RawgApiClient rawgApi,
     required AppDatabase database,
-  })  : _tmdbApi = tmdbApi,
-        _rawgApi = rawgApi,
-        _mediaDao = database.mediaDao; // Se obtiene el DAO desde la BBDD
+  }) : _tmdbApi = tmdbApi,
+       _rawgApi = rawgApi,
+       _mediaDao = database.mediaDao; // Se obtiene el DAO desde la BBDD
 
   // --- IMPLEMENTACIÓN DE API ---
 
@@ -66,7 +66,7 @@ class MediaRepositoryImpl implements MediaRepository {
   // --- IMPLEMENTACIÓN DE BBDD ---
 
   @override
-  Stream<List<MediaItem>> getPendingItems(MediaType type) { // <-- ¡NOMBRE CORREGIDO!
+  Stream<List<MediaItem>> getPendingItems(MediaType type) {
     return _mediaDao
         .getPendingItems(type)
         .map((entries) => entries.map((e) => e.toDomain()).toList());
@@ -90,8 +90,7 @@ class MediaRepositoryImpl implements MediaRepository {
   }
 
   @override
-  Future<void> saveMediaItem(MediaItem item) { // <-- NOMBRE CORREGIDO
-    // Llama al DAO, que también se llama 'saveMediaItem'
+  Future<void> saveMediaItem(MediaItem item) {
     return _mediaDao.saveMediaItem(item.toEntry(MediaStatus.pending));
   }
 
@@ -101,19 +100,24 @@ class MediaRepositoryImpl implements MediaRepository {
   }
 
   @override
-  Future<void> deleteMediaItem(int id, MediaType type) { // <-- NOMBRE CORREGIDO
+  Future<void> moveToPending(int id, MediaType type) {
+    return _mediaDao.moveToPending(id, type);
+  }
+
+  @override
+  Future<void> deleteMediaItem(int id, MediaType type) {
     return _mediaDao.deleteMediaItem(id, type);
   }
 
   // --- IMPLEMENTACIÓN DE CÁLCULO DE TIEMPO ---
 
   @override
-  Stream<int> getTotalPendingTime(MediaType type) { // <-- NOMBRE CORREGIDO
+  Stream<int> getTotalPendingTime(MediaType type) {
     return _mediaDao.getTotalPendingTime(type);
   }
 
   @override
-  Stream<int> getTotalCompletedTime(MediaType type) { // <-- NOMBRE CORREGIDO
+  Stream<int> getTotalCompletedTime(MediaType type) {
     return _mediaDao.getTotalCompletedTime(type);
   }
 }

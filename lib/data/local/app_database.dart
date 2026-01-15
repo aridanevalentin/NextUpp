@@ -36,7 +36,8 @@ class MediaItems extends Table {
 
 // --- DEFINICIÓN DE LA BASE DE DATOS ---
 @DriftDatabase(tables: [MediaItems], daos: [MediaDao])
-class AppDatabase extends _$AppDatabase { // _$AppDatabase es la clase generada
+class AppDatabase extends _$AppDatabase {
+  // _$AppDatabase es la clase generada
   AppDatabase() : super(_openConnection());
 
   @override
@@ -45,61 +46,65 @@ class AppDatabase extends _$AppDatabase { // _$AppDatabase es la clase generada
   @override
   MediaDao get mediaDao => MediaDao(this);
 }
+
 // --- DEFINICIÓN DEL DAO ---
 @DriftAccessor(tables: [MediaItems])
 class MediaDao extends DatabaseAccessor<AppDatabase> with _$MediaDaoMixin {
-
   MediaDao(super.db);
 
   // Obtiene un Stream de items "Pendientes" de un tipo dado
   Stream<List<MediaItemEntry>> getPendingItems(MediaType type) {
     return (select(mediaItems)
-            ..where((tbl) => tbl.status.equals(MediaStatus.pending.name))
-            ..where((tbl) => tbl.mediaType.equals(type.name)))
+          ..where((tbl) => tbl.status.equals(MediaStatus.pending.name))
+          ..where((tbl) => tbl.mediaType.equals(type.name)))
         .watch();
   }
 
   // Obtiene un Stream de items "Pendientes" de un tipo dado
   Stream<List<MediaItemEntry>> getCompletedItems(MediaType type) {
     return (select(mediaItems)
-            ..where((tbl) => tbl.status.equals(MediaStatus.completed.name))
-            ..where((tbl) => tbl.mediaType.equals(type.name)))
+          ..where((tbl) => tbl.status.equals(MediaStatus.completed.name))
+          ..where((tbl) => tbl.mediaType.equals(type.name)))
         .watch();
   }
 
   // Obtiene el estado de un solo item
   Stream<MediaItemEntry?> getMediaItemStream(int id, MediaType type) {
     return (select(mediaItems)
-            ..where((tbl) => tbl.id.equals(id))
-            ..where((tbl) => tbl.mediaType.equals(type.name)))
+          ..where((tbl) => tbl.id.equals(id))
+          ..where((tbl) => tbl.mediaType.equals(type.name)))
         .watchSingleOrNull();
   }
 
   // Guarda un item (INSERT o UPDATE) con estado 'pending'
   Future<void> saveMediaItem(MediaItemEntry item) {
     return into(mediaItems).insert(
-        item.copyWith(status: MediaStatus.pending),
-        mode: InsertMode.insertOrReplace, // => onConflict = REPLACE
+      item.copyWith(status: MediaStatus.pending),
+      mode: InsertMode.insertOrReplace, // => onConflict = REPLACE
     );
   }
 
   // Marca un item como completado
   Future<void> markAsCompleted(int id, MediaType type) {
     return (update(mediaItems)
-            ..where((tbl) => tbl.id.equals(id))
-            ..where((tbl) => tbl.mediaType.equals(type.name)))
-        .write(
-      const MediaItemsCompanion(
-        status: Value(MediaStatus.completed),
-      ),
-    );
+          ..where((tbl) => tbl.id.equals(id))
+          ..where((tbl) => tbl.mediaType.equals(type.name)))
+        .write(const MediaItemsCompanion(status: Value(MediaStatus.completed)));
+  }
+
+  // Marca un item como pendiente
+  Future<void> moveToPending(int id, MediaType type) {
+    return (update(mediaItems)
+          ..where((tbl) => tbl.id.equals(id))
+          ..where((tbl) => tbl.mediaType.equals(type.name)))
+        .write(const MediaItemsCompanion(status: Value(MediaStatus.pending)));
   }
 
   // Borra un item (DELETE)
   Future<void> deleteMediaItem(int id, MediaType type) {
     return (delete(mediaItems)
-      ..where((tbl) => tbl.id.equals(id))..where((tbl) =>
-          tbl.mediaType.equals(type.name)))
+          ..where((tbl) => tbl.id.equals(id))
+          ..where((tbl) => tbl.mediaType.equals(type.name)))
         .go();
   }
 
@@ -130,7 +135,7 @@ class MediaDao extends DatabaseAccessor<AppDatabase> with _$MediaDaoMixin {
 }
 
 LazyDatabase _openConnection() {
-  return LazyDatabase(() async{
+  return LazyDatabase(() async {
     final dbFolder = await getApplicationDocumentsDirectory();
     final file = File(p.join(dbFolder.path, 'nextupp_db.sqlite'));
     return NativeDatabase.createInBackground(file);

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nextupp/core/service_locator.dart';
 import 'package:nextupp/l10n/app_localizations.dart';
 import 'package:nextupp/presentation/screens/home_screen.dart';
+import 'package:nextupp/core/theme/app_theme.dart';
 
 Future<void> main() async {
   // Asegura que los 'bindings' de Flutter estén inicializados
@@ -13,11 +14,7 @@ Future<void> main() async {
   // Configura todas las dependencias antes de que la app arranque.
   await setupLocator();
 
-  runApp(
-      const ProviderScope(
-          child: NextUppApp()
-      ),
-  );
+  runApp(const ProviderScope(child: NextUppApp()));
 }
 
 // Este es el Widget raíz de la aplicación
@@ -41,12 +38,8 @@ class NextUppApp extends StatelessWidget {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
 
-
       // 'theme' es donde pondremos el tema de colores
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: AppTheme.darkTheme,
 
       // 'home' es la primera pantalla que se muestra
       home: const HomeScreen(),

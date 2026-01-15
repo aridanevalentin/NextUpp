@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nextupp/core/service_locator.dart';
+import 'package:nextupp/core/errors/failure.dart';
 import 'package:nextupp/domain/models/media_item.dart';
 import 'package:nextupp/domain/models/media_type.dart';
 import 'package:nextupp/domain/repositories/media_repository.dart';
@@ -16,8 +17,7 @@ class PendingListNotifier extends StateNotifier<MediaListState> {
     try {
       await _repository.markAsCompleted(item.id, item.mediaType);
     } catch (e) {
-      // TODO: Manejar el error (ej. mostrar un snackbar)
-      print('Error al marcar como completado: $e');
+      state = state.copyWith(failure: UnknownFailure(e.toString()));
     }
   }
 
@@ -25,8 +25,7 @@ class PendingListNotifier extends StateNotifier<MediaListState> {
     try {
       await _repository.deleteMediaItem(item.id, item.mediaType);
     } catch (e) {
-      // TODO: Manejar el error
-      print('Error al eliminar: $e');
+      state = state.copyWith(failure: UnknownFailure(e.toString()));
     }
   }
 
@@ -41,15 +40,18 @@ class PendingListNotifier extends StateNotifier<MediaListState> {
 
   void _listenToPendingItems() {
     // Escucha la lista de items
-    _itemsSubscription = _repository.getPendingItems(_mediaType).listen((items) {
+    _itemsSubscription = _repository.getPendingItems(_mediaType).listen((
+      items,
+    ) {
       state = state.copyWith(isLoading: false, items: items);
     });
 
     // Escucha el sumatorio de tiempo
-    _timeSubscription =
-        _repository.getTotalPendingTime(_mediaType).listen((time) {
-          state = state.copyWith(totalTimeInMinutes: time);
-        });
+    _timeSubscription = _repository.getTotalPendingTime(_mediaType).listen((
+      time,
+    ) {
+      state = state.copyWith(totalTimeInMinutes: time);
+    });
   }
 
   // Limpia las suscripciones cuando el provider se destruye
@@ -73,8 +75,15 @@ class CompletedListNotifier extends StateNotifier<MediaListState> {
     try {
       await _repository.deleteMediaItem(item.id, item.mediaType);
     } catch (e) {
-      // TODO: Manejar el error
-      print('Error al eliminar: $e');
+      state = state.copyWith(failure: UnknownFailure(e.toString()));
+    }
+  }
+
+  Future<void> moveToPending(MediaItem item) async {
+    try {
+      await _repository.moveToPending(item.id, item.mediaType);
+    } catch (e) {
+      state = state.copyWith(failure: UnknownFailure(e.toString()));
     }
   }
 
@@ -84,16 +93,18 @@ class CompletedListNotifier extends StateNotifier<MediaListState> {
 
   void _listenToCompletedItems() {
     // Escucha la lista de items
-    _itemsSubscription =
-        _repository.getCompletedItems(_mediaType).listen((items) {
-          state = state.copyWith(isLoading: false, items: items);
-        });
+    _itemsSubscription = _repository.getCompletedItems(_mediaType).listen((
+      items,
+    ) {
+      state = state.copyWith(isLoading: false, items: items);
+    });
 
     // Escucha el sumatorio de tiempo
-    _timeSubscription =
-        _repository.getTotalCompletedTime(_mediaType).listen((time) {
-          state = state.copyWith(totalTimeInMinutes: time);
-        });
+    _timeSubscription = _repository.getTotalCompletedTime(_mediaType).listen((
+      time,
+    ) {
+      state = state.copyWith(totalTimeInMinutes: time);
+    });
   }
 
   @override
@@ -109,13 +120,21 @@ class CompletedListNotifier extends StateNotifier<MediaListState> {
 // Al ser family se les puede pasar un parámetro
 
 // Provider para la lista de Pendientes
-final pendingListProvider = StateNotifierProvider.family<
-    PendingListNotifier, MediaListState, MediaType>((ref, mediaType) {
-  return PendingListNotifier(mediaType);
-});
+final pendingListProvider =
+    StateNotifierProvider.family<
+      PendingListNotifier,
+      MediaListState,
+      MediaType
+    >((ref, mediaType) {
+      return PendingListNotifier(mediaType);
+    });
 
 // Provider para la lista de Completados
-final completedListProvider = StateNotifierProvider.family<
-    CompletedListNotifier, MediaListState, MediaType>((ref, mediaType) {
-  return CompletedListNotifier(mediaType);
-});
+final completedListProvider =
+    StateNotifierProvider.family<
+      CompletedListNotifier,
+      MediaListState,
+      MediaType
+    >((ref, mediaType) {
+      return CompletedListNotifier(mediaType);
+    });

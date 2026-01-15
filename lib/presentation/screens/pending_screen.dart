@@ -4,9 +4,11 @@ import 'package:nextupp/domain/models/media_status.dart';
 import 'package:nextupp/domain/models/media_type.dart';
 import 'package:nextupp/presentation/providers/media_list_provider.dart';
 import 'package:nextupp/presentation/providers/media_list_state.dart';
+import 'package:nextupp/core/utils/snackbar_utils.dart';
+import 'package:nextupp/core/utils/time_formatter.dart';
 import 'package:nextupp/l10n/app_localizations.dart';
 import 'package:nextupp/presentation/utils/localization_extensions.dart';
-import 'package:nextupp/presentation/widgets/media_card.dart';
+import 'package:nextupp/presentation/widgets/media_grid.dart';
 import 'package:nextupp/presentation/screens/detail/detail_screen.dart';
 
 // Es un ConsumerWidget porque solo necesita leer el provider y no tiene estado local (como un TextEditingController).
@@ -22,31 +24,50 @@ class PendingScreen extends ConsumerWidget {
 
     // Observa el provider
     // Riverpod se encarga de crear/obtener el Notifier correcto.
-    final state = ref.watch(pendingListProvider(mediaType));
+    final provider = pendingListProvider(mediaType);
+    final state = ref.watch(provider);
+
+    // Escucha cambios de error
+    ref.listen(provider, (previous, next) {
+      if (next.failure != null && next.failure != previous?.failure) {
+        SnackbarUtils.showError(context, next.failure!.message);
+      }
+    });
 
     return Scaffold(
-      appBar: AppBar(
-        // TODO: Localizar este título
-        title: FittedBox(
-          fit: BoxFit.scaleDown,
-          child: Text(l10n.pendingTitle(mediaTypeString)),
-        ),
-        // Muestra el tiempo total en la barra
-        actions: [
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 16.0),
-              // TODO: Formatear estos minutos (ej. "2h 30m")
-              child: Text(l10n.totalTime('${state.totalTimeInMinutes} min')),
+      body: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return [
+            SliverAppBar(
+              title: Text(l10n.pendingTitle(mediaTypeString)),
+              centerTitle: true,
+              floating: true,
+              snap: true,
+              actions: [
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 16.0),
+                    child: Text(
+                      l10n.totalTime(formatDuration(state.totalTimeInMinutes)),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
+          ];
+        },
+        body: _buildBody(context, state, l10n, ref),
       ),
-      body: _buildBody(state, l10n, ref),
     );
   }
 
-  Widget _buildBody(MediaListState state, AppLocalizations l10n, ref) {
+  Widget _buildBody(
+    BuildContext context,
+    MediaListState state,
+    AppLocalizations l10n,
+    ref,
+  ) {
     if (state.isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -57,31 +78,25 @@ class PendingScreen extends ConsumerWidget {
     }
 
     // Muestra la lista de items
-    return ListView.builder(
-      itemCount: state.items.length,
-      itemBuilder: (context, index) {
-        final item = state.items[index];
-        return MediaCard(
-          item: item,
-          status: MediaStatus.pending,
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => DetailScreen(
-                  args: (id: item.id, type: item.mediaType),
-                ),
-              ),
-            );
-          },
-          onSaveToPending: () { /* No se usa aquí (ya está en pendientes) */ },
-          onMarkAsCompleted: () {
-            ref.read(pendingListProvider(mediaType).notifier).markAsCompleted(item);
-          },
-          onRemove: () {
-            ref.read(pendingListProvider(mediaType).notifier).removeMediaItem(item);
-          },
+    // Muestra la lista de items en GRID
+    return MediaGrid(
+      items: state.items,
+      mediaType: mediaType,
+      fixedStatus: MediaStatus.pending,
+      onTap: (item) {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) =>
+                DetailScreen(args: (id: item.id, type: item.mediaType)),
+          ),
         );
-          // TODO: Añadir menú para "Mark as Completed" o "Remove"
+      },
+      onSaveToPending: (item) {},
+      onMarkAsCompleted: (item) {
+        ref.read(pendingListProvider(mediaType).notifier).markAsCompleted(item);
+      },
+      onRemove: (item) {
+        ref.read(pendingListProvider(mediaType).notifier).removeMediaItem(item);
       },
     );
   }
