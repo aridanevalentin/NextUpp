@@ -44,58 +44,67 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       return Center(child: Text('Error: ${state.errorMessage}'));
     }
 
-    return Stack(
-      children: [
-        CustomScrollView(
-          slivers: [
-            // --- HERO SECTION ---
-            if (state.heroItem != null)
-              SliverToBoxAdapter(child: _HeroHeader(item: state.heroItem!)),
+    return Scaffold(
+      backgroundColor: AppTheme.background,
+      body: Stack(
+        children: [
+          ScrollConfiguration(
+            behavior: const ScrollBehavior().copyWith(overscroll: false),
+            child: CustomScrollView(
+              physics: const ClampingScrollPhysics(),
+              slivers: [
+                // --- HERO SECTION ---
+                if (state.heroItem != null)
+                  SliverToBoxAdapter(child: _HeroHeader(item: state.heroItem!)),
 
-            // --- SECTION: TRENDING (Movies & TV) ---
-            SliverToBoxAdapter(
-              child: _SectionHeader(title: l10n.trendingSectionTitle),
-            ),
-            SliverToBoxAdapter(
-              child: _HorizontalMediaList(items: state.trendingMoviesAndSeries),
-            ),
-
-            // --- SECTION: POPULAR GAMES ---
-            SliverToBoxAdapter(
-              child: _SectionHeader(title: l10n.popularGamesSectionTitle),
-            ),
-            SliverToBoxAdapter(
-              child: _HorizontalMediaList(items: state.popularGames),
-            ),
-
-            const SliverPadding(padding: EdgeInsets.only(bottom: 100)),
-          ],
-        ),
-        // Floating Glass Profile Avatar
-        Positioned(
-          top:
-              16, // SafeArea padding usually handled by Scaffold, but we might need MediaQuery
-          right: 16,
-          child: SafeArea(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.3),
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white24),
+                // --- SECTION: TRENDING (Movies & TV) ---
+                SliverToBoxAdapter(
+                  child: _SectionHeader(title: l10n.trendingSectionTitle),
+                ),
+                SliverToBoxAdapter(
+                  child: _HorizontalMediaList(
+                    items: state.trendingMoviesAndSeries,
                   ),
-                  child: const Icon(Icons.person, color: Colors.white),
+                ),
+
+                // --- SECTION: POPULAR GAMES ---
+                SliverToBoxAdapter(
+                  child: _SectionHeader(title: l10n.popularGamesSectionTitle),
+                ),
+                SliverToBoxAdapter(
+                  child: _HorizontalMediaList(items: state.popularGames),
+                ),
+
+                const SliverPadding(padding: EdgeInsets.only(bottom: 150)),
+              ],
+            ),
+          ),
+          // Floating Glass Profile Avatar
+          Positioned(
+            top:
+                16, // SafeArea padding usually handled by Scaffold, but we might need MediaQuery
+            right: 16,
+            child: SafeArea(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.3),
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white24),
+                    ),
+                    child: const Icon(Icons.person, color: Colors.white),
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

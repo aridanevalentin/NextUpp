@@ -66,6 +66,14 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
     return Scaffold(
       body: NestedScrollView(
+        // Deshabilita el scroll si no hay búsqueda activa (texto vacío) o no hay resultados
+        // Deshabilita el scroll si está cargando, no hay texto o no hay resultados
+        physics:
+            (state.isLoading ||
+                _searchController.text.isEmpty ||
+                state.results.isEmpty)
+            ? const NeverScrollableScrollPhysics()
+            : const BouncingScrollPhysics(),
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
             SliverAppBar(
@@ -132,6 +140,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                                     onPressed: () {
                                       _searchController.clear();
                                       notifier.clearSearch();
+                                      // Forzamos rebuild para actualizar 'physics' inmediatamente
+                                      setState(() {});
                                     },
                                     tooltip: l10n.searchClearTooltip,
                                   )
