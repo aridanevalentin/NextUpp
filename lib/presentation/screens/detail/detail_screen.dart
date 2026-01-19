@@ -3,9 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nextupp/domain/models/game.dart';
 import 'package:nextupp/domain/models/media_status.dart';
 import 'package:nextupp/domain/models/series.dart';
+import 'package:nextupp/presentation/widgets/media_card.dart';
 import 'package:nextupp/l10n/app_localizations.dart';
 import 'package:nextupp/presentation/providers/detail_provider.dart';
 import 'package:nextupp/presentation/providers/detail_state.dart';
+import 'package:nextupp/core/theme/app_theme.dart';
 
 class DetailScreen extends ConsumerWidget {
   final DetailProviderArgs args;
@@ -20,7 +22,10 @@ class DetailScreen extends ConsumerWidget {
     final notifier = ref.read(detailProvider(args).notifier);
     final snackbarHostState = GlobalKey<ScaffoldMessengerState>();
 
-    ref.listen(detailProvider(args).select((value) => value.snackbarSignal), (previous, nextSignal) {
+    ref.listen(detailProvider(args).select((value) => value.snackbarSignal), (
+      previous,
+      nextSignal,
+    ) {
       if (nextSignal != null) {
         final String message;
         switch (nextSignal) {
@@ -43,14 +48,19 @@ class DetailScreen extends ConsumerWidget {
         notifier.snackbarMessageShown();
       }
     });
+
     return Scaffold(
       key: snackbarHostState,
       floatingActionButton: _buildFab(context, state, notifier, l10n),
-
       body: _buildBody(context, state, l10n),
     );
   }
-  Widget _buildBody(BuildContext context, DetailState state, AppLocalizations l10n) {
+
+  Widget _buildBody(
+    BuildContext context,
+    DetailState state,
+    AppLocalizations l10n,
+  ) {
     // --- ESTADO DE CARGA ---
     if (state.isLoading) {
       return const Center(child: CircularProgressIndicator());
@@ -74,21 +84,45 @@ class DetailScreen extends ConsumerWidget {
         SliverAppBar(
           expandedHeight: 400.0,
           floating: false,
-          pinned: true, // El AppBar se queda arriba al hacer scroll
+          pinned: true,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () => Navigator.of(context).pop(),
             tooltip: l10n.detail_back_button,
           ),
           flexibleSpace: FlexibleSpaceBar(
-            background: item.posterUrl.isNotEmpty
-                ? Image.network(
-              item.posterUrl,
-              fit: BoxFit.cover,
-              color: Colors.black.withAlpha(77), // 77 es 30% de opacidad aproximadamente (255 * 0.3)
-              colorBlendMode: BlendMode.darken,
-            )
-                : Container(color: Colors.grey),
+            title: Text(
+              item.title,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                shadows: [Shadow(color: Colors.black, blurRadius: 10)],
+              ),
+            ),
+            titlePadding: const EdgeInsets.only(left: 16, bottom: 16),
+            background: Stack(
+              fit: StackFit.expand,
+              children: [
+                if (item.posterUrl.isNotEmpty)
+                  Hero(
+                    tag: item.id,
+                    child: Image.network(item.posterUrl, fit: BoxFit.cover),
+                  )
+                else
+                  Container(color: Colors.grey),
+                // Gradient overlay
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Colors.transparent, AppTheme.background],
+                      stops: const [0.6, 1.0],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         SliverToBoxAdapter(
@@ -97,23 +131,27 @@ class DetailScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(item.title, style: Theme.of(context).textTheme.headlineLarge),
                 const SizedBox(height: 8),
                 Text(
                   l10n.detail_rating_year(
                     item.voteAverage.toStringAsFixed(1),
-                    item.releaseDate.length >= 4 ? item.releaseDate.substring(0, 4) : 'N/A',
+                    item.releaseDate.length >= 4
+                        ? item.releaseDate.substring(0, 4)
+                        : 'N/A',
                   ),
-                  style: Theme.of(context).textTheme.titleMedium,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: MediaCard.getRatingColor(item.voteAverage),
+                  ),
                 ),
                 const SizedBox(height: 16),
 
                 // --- Información Específica ---
-                if (item is Series)
-                  _buildSeriesInfo(context, item, l10n),
-                if (item is Game)
-                  _buildGameInfo(context, item, l10n),
-                Text(item.overview, style: Theme.of(context).textTheme.bodyLarge),
+                if (item is Series) _buildSeriesInfo(context, item, l10n),
+                if (item is Game) _buildGameInfo(context, item, l10n),
+                Text(
+                  item.overview,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
                 const SizedBox(height: 100),
               ],
             ),
@@ -122,7 +160,13 @@ class DetailScreen extends ConsumerWidget {
       ],
     );
   }
-  Widget? _buildFab(BuildContext context, DetailState state, DetailNotifier notifier, AppLocalizations l10n) {
+
+  Widget? _buildFab(
+    BuildContext context,
+    DetailState state,
+    DetailNotifier notifier,
+    AppLocalizations l10n,
+  ) {
     if (state.item == null) return null;
     switch (state.status) {
       case MediaStatus.notAdded:
@@ -147,7 +191,12 @@ class DetailScreen extends ConsumerWidget {
         );
     }
   }
-  Widget _buildSeriesInfo(BuildContext context, Series series, l10n) {
+
+  Widget _buildSeriesInfo(
+    BuildContext context,
+    Series series,
+    AppLocalizations l10n,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -162,7 +211,12 @@ class DetailScreen extends ConsumerWidget {
       ],
     );
   }
-  Widget _buildGameInfo(BuildContext context, Game game, l10n) {
+
+  Widget _buildGameInfo(
+    BuildContext context,
+    Game game,
+    AppLocalizations l10n,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

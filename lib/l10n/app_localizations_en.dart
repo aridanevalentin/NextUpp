@@ -116,4 +116,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get detail_fab_remove => 'Remove';
+
+  @override
+  String get homeTitle => 'Home';
+
+  @override
+  String get searchTitle => 'Search';
+
+  @override
+  String get libraryTitle => 'Library';
+
+  @override
+  String get profileTitle => 'Profile';
+
+  @override
+  String get trendingSectionTitle => 'Trending Today';
+
+  @override
+  String get popularGamesSectionTitle => 'Featured Games';
 }

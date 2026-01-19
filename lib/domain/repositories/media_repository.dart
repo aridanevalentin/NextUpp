@@ -12,6 +12,12 @@ abstract class MediaRepository {
   // Obtiene los detalles de las peliculas incluyendo sus proveedores
   Future<MediaItem> getMediaDetails(int id, MediaType type);
 
+  // Obtiene items en tendencia (Hero Section)
+  Future<List<MediaItem>> getTrendingMedia();
+
+  // Obtiene items populares por tipo (Carruseles)
+  Future<List<MediaItem>> getPopularMedia(MediaType type);
+
   // --- LOCAL DATA BASE ---
 
   // Obtiene la lista de "pendientes" (status = 'pending')

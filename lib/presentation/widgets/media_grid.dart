@@ -16,6 +16,7 @@ class MediaGrid extends StatelessWidget {
   final MediaStatus? fixedStatus;
   // O un builder que determine el status por item (ej. búsqueda)
   final MediaStatus Function(MediaItem)? statusBuilder;
+  final double bottomPadding; // Padding inferior opcional
 
   const MediaGrid({
     super.key,
@@ -27,6 +28,7 @@ class MediaGrid extends StatelessWidget {
     required this.onRemove,
     this.fixedStatus,
     this.statusBuilder,
+    this.bottomPadding = 16.0, // Default to standard padding
   }) : assert(
          fixedStatus != null || statusBuilder != null,
          'Debes proveer un fixedStatus o un statusBuilder',
@@ -64,7 +66,7 @@ class MediaGrid extends StatelessWidget {
     }
 
     return GridView.builder(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.fromLTRB(16, 16, 16, bottomPadding),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: crossAxisCount,
         childAspectRatio: childAspectRatio,

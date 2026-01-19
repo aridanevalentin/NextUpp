@@ -73,5 +73,11 @@
   },
   "detail_fab_add": "Add to Pending",
   "detail_fab_watched": "Mark as Completed",
-  "detail_fab_remove": "Remove"
+  "detail_fab_remove": "Remove",
+  "homeTitle": "Home",
+  "searchTitle": "Search",
+  "libraryTitle": "Library",
+  "profileTitle": "Profile",
+  "trendingSectionTitle": "Trending Today",
+  "popularGamesSectionTitle": "Featured Games"
 }

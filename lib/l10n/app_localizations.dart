@@ -283,6 +283,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Remove'**
   String get detail_fab_remove;
+
+  /// No description provided for @homeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get homeTitle;
+
+  /// No description provided for @searchTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get searchTitle;
+
+  /// No description provided for @libraryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Library'**
+  String get libraryTitle;
+
+  /// No description provided for @profileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profileTitle;
+
+  /// No description provided for @trendingSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Trending Today'**
+  String get trendingSectionTitle;
+
+  /// No description provided for @popularGamesSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Featured Games'**
+  String get popularGamesSectionTitle;
 }
 
 class _AppLocalizationsDelegate

@@ -27,8 +27,6 @@ class MediaCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Si es un juego, usamos layout horizontal (paisaje)
-    // Si es peli/serie, usamos layout vertical (poster)
     if (item.mediaType == MediaType.game) {
       return _GameCard(
         item: item,
@@ -48,6 +46,12 @@ class MediaCard extends StatelessWidget {
         onRemove: onRemove,
       );
     }
+  }
+
+  static Color getRatingColor(double rating) {
+    if (rating >= 7.0) return const Color(0xFF00E676); // Green Neon
+    if (rating >= 5.0) return Colors.amber;
+    return Colors.redAccent;
   }
 }
 
@@ -83,13 +87,16 @@ class _GameCard extends StatelessWidget {
           children: [
             // Imagen de Fondo (Full Bleed)
             Positioned.fill(
-              child: CachedNetworkImage(
-                imageUrl: item.posterUrl,
-                fit: BoxFit.cover,
-                placeholder: (context, url) =>
-                    Container(color: AppTheme.surface),
-                errorWidget: (context, url, error) =>
-                    const Center(child: Icon(Icons.videogame_asset_off)),
+              child: Hero(
+                tag: item.id,
+                child: CachedNetworkImage(
+                  imageUrl: item.posterUrl,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) =>
+                      Container(color: AppTheme.surface),
+                  errorWidget: (context, url, error) =>
+                      const Center(child: Icon(Icons.videogame_asset_off)),
+                ),
               ),
             ),
             // Gradiente para mejorar legibilidad del texto
@@ -150,6 +157,28 @@ class _GameCard extends StatelessWidget {
                 color: Colors.white, // Icono blanco para contraste
               ),
             ),
+            // Rating Badge
+            Positioned(
+              top: 8,
+              left: 8,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: MediaCard.getRatingColor(
+                    item.voteAverage,
+                  ).withOpacity(0.9),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  item.voteAverage.toStringAsFixed(1),
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -190,13 +219,16 @@ class _MovieCard extends StatelessWidget {
               child: Stack(
                 fit: StackFit.expand,
                 children: [
-                  CachedNetworkImage(
-                    imageUrl: item.posterUrl,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) =>
-                        Container(color: AppTheme.surface),
-                    errorWidget: (context, url, error) =>
-                        const Center(child: Icon(Icons.movie_filter)),
+                  Hero(
+                    tag: item.id,
+                    child: CachedNetworkImage(
+                      imageUrl: item.posterUrl,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) =>
+                          Container(color: AppTheme.surface),
+                      errorWidget: (context, url, error) =>
+                          const Center(child: Icon(Icons.movie_filter)),
+                    ),
                   ),
                   // Menú superpuesto discreto
                   Positioned(
@@ -216,6 +248,31 @@ class _MovieCard extends StatelessWidget {
                         onRemove: onRemove,
                         color: Colors.white,
                         iconSize: 20,
+                      ),
+                    ),
+                  ),
+                  // Rating Badge
+                  Positioned(
+                    top: 8,
+                    left: 8,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: MediaCard.getRatingColor(
+                          item.voteAverage,
+                        ).withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        item.voteAverage.toStringAsFixed(1),
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
                       ),
                     ),
                   ),
@@ -251,56 +308,104 @@ class _MediaMenuButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return PopupMenuButton<String>(
-      icon: Icon(Icons.more_vert, color: color, size: iconSize),
-      tooltip: l10n.card_more_actions,
-      onSelected: (value) {
-        switch (value) {
-          case 'save':
-            onSaveToPending();
-            break;
-          case 'complete':
-            onMarkAsCompleted();
-            break;
-          case 'remove':
-            onRemove();
-            break;
-          case 'pending':
-            // Logic to move back to pending if needed in future
-            // For now we assume 'save' does this or we add a specific case
-            // But reuse onSaveToPending for now as "Add/Move"
-            onSaveToPending();
-            break;
-        }
-      },
-      itemBuilder: (BuildContext context) {
-        switch (status) {
-          case MediaStatus.notAdded:
-            return [
-              PopupMenuItem(
-                value: 'save',
-                child: Text(l10n.card_add_to_pending),
-              ),
-            ];
-          case MediaStatus.pending:
-            return [
-              PopupMenuItem(
-                value: 'complete',
-                child: Text(l10n.card_mark_as_completed),
-              ),
-              PopupMenuItem(value: 'remove', child: Text(l10n.card_remove)),
-            ];
-          case MediaStatus.completed:
-            return [
-              // Usamos 'pending' como valor para diferenciar si es necesario
-              PopupMenuItem(
-                value: 'save',
-                child: Text("Mover a Pendientes"),
-              ), // TODO: Localizar
-              PopupMenuItem(value: 'remove', child: Text(l10n.card_remove)),
-            ];
-        }
-      },
+    return Theme(
+      data: Theme.of(context).copyWith(
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+      ),
+      child: PopupMenuButton<String>(
+        tooltip: l10n.card_more_actions,
+        color: Colors.black.withOpacity(0.8),
+        elevation: 0,
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          side: const BorderSide(color: Colors.white12, width: 1),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Icon(Icons.more_vert, color: color, size: iconSize),
+        ),
+        onSelected: (value) {
+          switch (value) {
+            case 'save':
+              onSaveToPending();
+              break;
+            case 'complete':
+              onMarkAsCompleted();
+              break;
+            case 'remove':
+              onRemove();
+              break;
+            case 'pending':
+              onSaveToPending();
+              break;
+          }
+        },
+        itemBuilder: (BuildContext context) {
+          switch (status) {
+            case MediaStatus.notAdded:
+              return [
+                PopupMenuItem(
+                  value: 'save',
+                  child: Center(
+                    child: Text(
+                      l10n.card_add_to_pending,
+                      style: const TextStyle(color: Colors.white),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ];
+            case MediaStatus.pending:
+              return [
+                PopupMenuItem(
+                  value: 'complete',
+                  child: Center(
+                    child: Text(
+                      l10n.card_mark_as_completed,
+                      style: const TextStyle(color: Colors.white),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                PopupMenuItem(
+                  value: 'remove',
+                  child: Center(
+                    child: Text(
+                      l10n.card_remove,
+                      style: const TextStyle(color: Colors.white),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ];
+            case MediaStatus.completed:
+              return [
+                PopupMenuItem(
+                  value: 'save',
+                  child: Center(
+                    child: Text(
+                      "Mover a Pendientes",
+                      style: const TextStyle(color: Colors.white),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ), // TODO: Localizar
+                PopupMenuItem(
+                  value: 'remove',
+                  child: Center(
+                    child: Text(
+                      l10n.card_remove,
+                      style: const TextStyle(color: Colors.white),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ];
+          }
+        },
+      ),
     );
   }
 }

@@ -39,21 +39,27 @@ class PendingScreen extends ConsumerWidget {
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
             SliverAppBar(
-              title: Text(l10n.pendingTitle(mediaTypeString)),
-              centerTitle: true,
-              floating: true,
-              snap: true,
-              actions: [
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 16.0),
+              title: Row(
+                children: [
+                  Expanded(
                     child: Text(
-                      l10n.totalTime(formatDuration(state.totalTimeInMinutes)),
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      l10n.pendingTitle(mediaTypeString),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(width: 8),
+                  Text(
+                    l10n.totalTime(formatDuration(state.totalTimeInMinutes)),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+              centerTitle: false,
+              floating: true,
+              snap: true,
             ),
           ];
         },
@@ -94,10 +100,13 @@ class PendingScreen extends ConsumerWidget {
       onSaveToPending: (item) {},
       onMarkAsCompleted: (item) {
         ref.read(pendingListProvider(mediaType).notifier).markAsCompleted(item);
+        SnackbarUtils.showSuccess(context, l10n.snackbar_completed);
       },
       onRemove: (item) {
         ref.read(pendingListProvider(mediaType).notifier).removeMediaItem(item);
+        SnackbarUtils.showDestructive(context, l10n.snackbar_removed);
       },
+      bottomPadding: 140, // Nav bar + spacing
     );
   }
 }

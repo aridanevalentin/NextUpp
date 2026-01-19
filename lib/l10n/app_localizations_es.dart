@@ -28,13 +28,13 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get mediaTypeMovie => 'Película';
+  String get mediaTypeMovie => 'Películas';
 
   @override
-  String get mediaTypeSeries => 'Serie';
+  String get mediaTypeSeries => 'Series';
 
   @override
-  String get mediaTypeGame => 'Juego';
+  String get mediaTypeGame => 'Juegos';
 
   @override
   String pendingTitle(Object mediaType) {
@@ -116,4 +116,22 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get detail_fab_remove => 'Eliminar';
+
+  @override
+  String get homeTitle => 'Inicio';
+
+  @override
+  String get searchTitle => 'Buscar';
+
+  @override
+  String get libraryTitle => 'Biblioteca';
+
+  @override
+  String get profileTitle => 'Perfil';
+
+  @override
+  String get trendingSectionTitle => 'Tendencias Globales';
+
+  @override
+  String get popularGamesSectionTitle => 'Juegos Destacados';
 }

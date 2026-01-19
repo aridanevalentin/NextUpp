@@ -12,6 +12,14 @@ class PendingListNotifier extends StateNotifier<MediaListState> {
   final MediaRepository _repository = sl<MediaRepository>();
   final MediaType _mediaType;
 
+  Future<void> addMediaItem(MediaItem item) async {
+    try {
+      await _repository.saveMediaItem(item);
+    } catch (e) {
+      state = state.copyWith(failure: UnknownFailure(e.toString()));
+    }
+  }
+
   Future<void> markAsCompleted(MediaItem item) async {
     // Llama al repositorio para actualizar la BBDD
     try {
@@ -67,6 +75,15 @@ class PendingListNotifier extends StateNotifier<MediaListState> {
 class CompletedListNotifier extends StateNotifier<MediaListState> {
   final MediaRepository _repository = sl<MediaRepository>();
   final MediaType _mediaType;
+
+  Future<void> addMediaItem(MediaItem item) async {
+    try {
+      await _repository.saveMediaItem(item);
+      await _repository.markAsCompleted(item.id, item.mediaType);
+    } catch (e) {
+      state = state.copyWith(failure: UnknownFailure(e.toString()));
+    }
+  }
 
   StreamSubscription? _itemsSubscription;
   StreamSubscription? _timeSubscription;

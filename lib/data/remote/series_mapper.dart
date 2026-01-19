@@ -6,7 +6,8 @@ const String _tmdbPosterBaseUrl = 'https://image.tmdb.org/t/p/w500';
 // Añade la función 'toDomain' a la clase SeriesDto
 extension SeriesMapper on SeriesDto {
   Series toDomain() {
-    final int avgRuntime = (episodeRunTime != null && episodeRunTime!.isNotEmpty)
+    final int avgRuntime =
+        (episodeRunTime != null && episodeRunTime!.isNotEmpty)
         ? episodeRunTime!.first
         : 45;
 
@@ -20,7 +21,8 @@ extension SeriesMapper on SeriesDto {
       title: title,
       overview: overview ?? '',
       posterUrl: posterPath != null ? '$_tmdbPosterBaseUrl$posterPath' : '',
-      voteAverage: (voteAverage ?? 0).toDouble(),
+      voteAverage: (voteAverage ?? 0)
+          .toDouble(), // Mantiene decimales (ej: 4.6), no redondear.
       releaseDate: releaseDate ?? '',
       totalDurationInMinutes: totalDuration,
       numberOfSeasons: seasons,

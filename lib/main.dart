@@ -3,7 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nextupp/core/service_locator.dart';
 import 'package:nextupp/l10n/app_localizations.dart';
-import 'package:nextupp/presentation/screens/home_screen.dart';
+import 'package:nextupp/presentation/screens/main_screen.dart';
 import 'package:nextupp/core/theme/app_theme.dart';
 
 Future<void> main() async {
@@ -42,7 +42,7 @@ class NextUppApp extends StatelessWidget {
       theme: AppTheme.darkTheme,
 
       // 'home' es la primera pantalla que se muestra
-      home: const HomeScreen(),
+      home: const MainScreen(),
     );
   }
 }

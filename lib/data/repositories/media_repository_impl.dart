@@ -14,6 +14,9 @@ import 'package:nextupp/data/remote/series_mapper.dart';
 import 'package:nextupp/data/remote/game_mapper.dart';
 import 'package:nextupp/data/remote/rawg_api_client.dart';
 import 'package:nextupp/data/remote/tmdb_api_client.dart';
+// Imports de DTOs para chequeo de tipos
+import 'package:nextupp/data/remote/movie_dto.dart';
+import 'package:nextupp/data/remote/series_dto.dart';
 
 // Esta clase implementa el contrato de MediaRepository
 class MediaRepositoryImpl implements MediaRepository {
@@ -60,6 +63,42 @@ class MediaRepositoryImpl implements MediaRepository {
       case MediaType.game:
         final searchResult = await _rawgApi.searchGames(query);
         return searchResult.results.map((dto) => dto.toDomain()).toList();
+    }
+  }
+
+  @override
+  Future<List<MediaItem>> getTrendingMedia() async {
+    try {
+      final result = await _tmdbApi.getTrendingAllOfDay();
+      final items = <MediaItem>[];
+      for (final dto in result.results) {
+        if (dto is MovieDto) {
+          items.add(dto.toDomain());
+        } else if (dto is SeriesDto) {
+          items.add(dto.toDomain());
+        }
+      }
+      return items;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<MediaItem>> getPopularMedia(MediaType type) async {
+    try {
+      if (type == MediaType.movie) {
+        final result = await _tmdbApi.getPopularMovies();
+        return result.results.map((dto) => dto.toDomain()).toList();
+      } else if (type == MediaType.series) {
+        final result = await _tmdbApi.getPopularSeries();
+        return result.results.map((dto) => dto.toDomain()).toList();
+      } else {
+        final result = await _rawgApi.getPopularGames();
+        return result.results.map((dto) => dto.toDomain()).toList();
+      }
+    } catch (e) {
+      rethrow;
     }
   }
 

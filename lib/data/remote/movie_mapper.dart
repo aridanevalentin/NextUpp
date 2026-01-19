@@ -11,7 +11,8 @@ extension MovieMapper on MovieDto {
       title: title,
       overview: overview ?? '',
       posterUrl: posterPath != null ? '$_tmdbPosterBaseUrl$posterPath' : '',
-      voteAverage: (voteAverage ?? 0).toDouble(),
+      voteAverage: (voteAverage ?? 0)
+          .toDouble(), // Mantiene decimales (ej: 4.6), no redondear.
       releaseDate: releaseDate ?? '',
       runtime: runtime ?? 0,
     );

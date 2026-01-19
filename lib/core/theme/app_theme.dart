@@ -57,14 +57,34 @@ class AppTheme {
         bodyMedium: TextStyle(color: secondary, fontSize: 14),
         bodySmall: TextStyle(color: secondary, fontSize: 12),
       ),
-      iconTheme: const IconThemeData(color: secondary),
+      snackBarTheme: SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: const Color(0xB3000000), // Black semi-transparent
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        contentTextStyle: const TextStyle(color: primary),
+      ),
+      // Material 3 NavigationBar Theme (si se usa NavigationBar en vez de BottomNavigationBar)
+      navigationBarTheme: NavigationBarThemeData(
+        indicatorColor: Colors.transparent,
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+        backgroundColor: const Color(0xB314181C),
+        iconTheme: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.selected)) {
+            return const IconThemeData(color: accent);
+          }
+          return const IconThemeData(color: Colors.white60);
+        }),
+      ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: Color(0xB314181C), // Semi-transparente
-        selectedItemColor: primary,
-        unselectedItemColor: secondary,
-        elevation: 0,
+        selectedItemColor: accent,
+        unselectedItemColor: Colors.white60,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
         type: BottomNavigationBarType.fixed,
+        elevation: 0,
       ),
+      iconTheme: const IconThemeData(color: secondary),
       // Slider y otros componentes
       sliderTheme: SliderThemeData(
         activeTrackColor: primary,

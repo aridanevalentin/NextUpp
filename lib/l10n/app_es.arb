@@ -31,5 +31,11 @@
   "detail_game_platforms": "Plataformas: {platforms}",
   "detail_fab_add": "Añadir a Pendientes",
   "detail_fab_watched": "Marcar como Completado",
-  "detail_fab_remove": "Eliminar"
+  "detail_fab_remove": "Eliminar",
+  "trendingSectionTitle": "Tendencias Globales",
+  "popularGamesSectionTitle": "Juegos Destacados",
+  "homeTitle": "Inicio",
+  "searchTitle": "Buscar",
+  "libraryTitle": "Biblioteca",
+  "profileTitle": "Perfil"
 }

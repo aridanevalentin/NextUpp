@@ -1,10 +1,11 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:nextupp/data/remote/media_item_dto.dart';
 
 part 'series_dto.g.dart';
 
 // --- DTO SERIES ---
 @JsonSerializable()
-class SeriesDto {
+class SeriesDto implements MediaItemDto {
   final int id;
   @JsonKey(name: 'name')
   final String title;
