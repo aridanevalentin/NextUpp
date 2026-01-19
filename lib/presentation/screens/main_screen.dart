@@ -1,7 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:nextupp/core/theme/app_theme.dart';
-import 'package:nextupp/domain/models/media_type.dart';
 import 'package:nextupp/l10n/app_localizations.dart';
 import 'package:nextupp/presentation/screens/dashboard_screen.dart';
 import 'package:nextupp/presentation/screens/library_screen.dart';

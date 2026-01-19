@@ -19,25 +19,19 @@ Objetivo: Que la app sea bonita, usable y tenga las pantallas de usuario listas 
 
 [X] Formato de Tiempo: Crear función formatDuration(int minutes) para que "125 min" se vea como "2h 5m".
 
-[ ] Feedback al Usuario (Snackbars):
+[X] Feedback al Usuario (Snackbars):
 
 Implementar mensajes flotantes: "Película guardada correctamente" o "Eliminada de pendientes".
 
 Manejar errores: Si falla la API, mostrar "Error de conexión" y no un pantallazo rojo.
 
-[ ] Lógica de Estados:
+[X] Lógica de Estados:
 
 Hacer que funcione el botón "Mover a Pendientes" desde Completados.
 
-[ ] Maquetación de Usuario (Mockup):
 
-Crear la pantalla UserProfileScreen (solo diseño, datos falsos).
 
-Diseñar la zona de estadísticas (gráficos de horas o contadores simples).
-
-Diseñar la tarjeta de "Review" para cuando sea social.
-
-[ ] Mejora Estética General:
+[X] Mejora Estética General:
 
 Unificar colores y tipografías.
 
@@ -45,6 +39,8 @@ Mejorar las tarjetas (MediaCard) para que las carátulas se vean bien.
 
 ---FASE 3: Backend & Usuarios (Firebase)
 Objetivo: Conectar la app bonita a la nube.
+
+[ ] Maquetación de Usuario (Mockup): Crear la pantalla UserProfileScreen.
 
 [ ] Setup Firebase: Crear proyecto (Plan Spark - Gratis) y activar Auth/Firestore.
 
