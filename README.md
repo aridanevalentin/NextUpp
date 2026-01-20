@@ -47,7 +47,7 @@ Currently in **Phase 2 (Local Prototype)**, NextUpp offers a fully functional lo
 
 | Dashboard | Search | Library |
 |:---:|:---:|:---:|
-| ![Dashboard](images/Dashboard.png) | ![Search](images/Search.png) | ![Library](images/Library.png) |
+| ![Dashboard](assets/images/Dashboard.jpg) | ![Search](assets/images/Search.jpg) | ![Library](assets/images/Library.jpg) |
 
 ---
 
